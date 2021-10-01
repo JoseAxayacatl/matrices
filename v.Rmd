@@ -1,0 +1,129 @@
+---
+title: "Operaciones con Matrices"
+author: "Jose A. Aranda y Esteban O. Munguía"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+***
+Para ingresar una matriz en **R**, se usa la función `matrix()` dentro de ésta debemos indicar los valores que irán dentro de la matriz, el número de filas `nrow=` y columnas `ncol=` y por último, indicar si los valores se acomodarán por filas o por columnas `byrow=`.
+
+Hacemos un objeto **A** que es una matriz que contiene los números del 1 al 9, de 3 filas y 3 columnas:
+Notar que por *default* los valores se acomodan por columna, en este caso el 1, 2 y 3 son la primera colmuna, el 4, 5 y 6 la segunda y el 7, 8 y 9 la tercera
+
+```{r echo=TRUE}
+A<-matrix(1:9,nrow=3,ncol=3)
+A
+
+```
+Si queremos que los valores esten acomodados por filas entonces usamos el argumento `byrow=`, que solo puede tener 2 valores:
+TRUE o FALSE, en este caso sera `byrow=TRUE`.
+
+Notamos que ahora el 1, 2 y 3 es parte de la primera fila, el 4,5 y 6 la segunda y el 7, 8 y 9 la tercera
+
+```{r echo=TRUE}
+A<-matrix(1:9,nrow=3,ncol=3,byrow=TRUE)
+A
+```
+En este ejemplo estamos seguros que **A** es una matriz cuadrada (mismo numero de filas y columnas). Sin embargo, esto lo podemos comprobar con la funcion `dim()`; el resultado de ésta serán dos valores, el primero indica el número de filas del objeto evaluado y el segundo, el número de columnas.
+
+```{r echo=TRUE}
+dim(A)
+```
+
+Podemos hacer operaciones con la matriz usando los signos `+   -   *   /`
+Si tenemos un objeto con un solo valor y hacemos cualquiera de estas operaciones con la matriz
+se aplicara la operacion para cada entrada de la matriz, es decir si sumamos A+x
+se sumara 2 a cada entrada de la matriz:
+
+```{r echo=TRUE}
+#suma
+x<-2
+A+x
+
+#resta
+A-x
+
+#multiplicación
+A*x
+
+#división
+A/x
+```
+
+Por otro lado, podemos hacer operaciones con matrices. En primer lugar podemos sumar y restar dos matrices siempre que ambas tengan las mismas dimensiones (mismo número de filas y columnas). Los valores de las matrices se suman y se restan uno a uno, con su correspondiente en la entrada de la otra matriz. En este ejemplo el valor a<sub>11</sub> de la matriz **A** se sumará con el elemento b<sub>11</sub> de la matriz **B**, después, el elemento a<sub>12</sub> se suma con el b<sub>12</sub> y así sucesivamente. Debido a lo anterior, el resultado es el mismo si se suma `A+B` que `B+A`.
+
+```{r echo=TRUE}
+A<-matrix(c(1,2,2,1),ncol=2,byrow=T)
+A
+B<-matrix(c(1,2,3,4),nrow=2,byrow=T)
+B
+A+B
+```
+
+Para el caso de las multiplicaciones estas solo se pueden realizar si la primer matriz tiene el mismo número de filas que la segunda matriz. El resulatdo de la multiplicación es una matriz que tiene el mismo numero de filas de la primera matriz y el mismo número de columnas de la segunda.
+Los valores de esta nueva matriz provienen de la suma de la multiplicación de las filas de la primera matriz por las columnas de la segunda. El orden para multiplicar y sumar las filas y columnas es el siguiente:
+
+En el ejemplo se multiplica la matriz **A** que es de 2x2 y la matriz **C** de 2x3 (**A** mismo número de columnas que filas en la matriz **C**)
+![](http://www.portalhuarpe.com.ar/Medhime20/Nuevos%20OA/SITIO%20Matrices%20y%20Determinantes/UnidadMatematica/Navegable/Objeto1Def.MatricesyDeterminantes/Navegable/Imagenes/ejmultiplicacion.gif)
+
+En **R** para indicar que estamos haciendo una multiplicación entre matrices se utiliza el operador `%*%`. Debido a que los resultados provienen de la suma de la multiplicación de filas y columnas, no es lo mismo multiplicar `A*B` que `B*A`:
+
+```{r echo=TRUE}
+A<-matrix(c(4,6,
+           -1,0),ncol=2, byrow=T)
+
+B<-matrix(c(3,-2,
+            4,1),ncol=2, byrow=T)
+A%*%B
+B%*%A
+
+
+C<-matrix(c(3,2,4,
+            4,3,5,
+            5,6,6),ncol=3, byrow=T)
+
+D<-matrix(c(5,1,1,
+            1,7,7,
+            4,8,9),ncol=3, byrow=T)
+C%*%D
+
+D%*%C
+```
+
+Por último se pueden multiplicar matrices por vectores siempre que se cumpla la regla que el primer elemento tenga el mismo número de columnas que de filas el segundo. En **R** se llaman vectores a un conjunto de valores que pueden ser o no numéricos.
+Un ejemplo sería el objeto **x** que tiene una secuencia numérica. Este en **R** es un vector, sin embargo cuando le preguntamos cuáles son sus dimensiones, el resultado es `NULL`porque no tiene dimensiones, sólo es un conjunto de números.
+```{r echo=TRUE}
+x<-c(1,2,3,4,5)
+x
+dim(x)
+```
+
+En notación matricial un vector es un arreglo numérico unidimensional (que sólo es una fila o una columna). Para indicar a **R** que queremos un vector en el sentido matricial debemos de hacer un objeto de tipo matriz que solo tenga una fila o una columna según sea el caso:
+
+```{r}
+#vector de 3 filas, 1 columna
+n<-matrix(c(5,1,4), ncol=1)
+n
+
+dim(n)
+
+A<-matrix(c(3,2,4,
+            4,3,5,
+            5,6,6), ncol=3,byrow=T)
+
+A%*%n
+
+#n%*%A
+#Error in n %*% A : argumentos no compatibles
+```
+
+En este último ejemplo la multiplicación de `A*n`se puede hacer pero la operaciónde `n*A`no se puede porque las dimensiones de este arreglo no son compatibles (el primer elemento no tiene el mismo número de columnas que de filas el segundo).
+
+
+
